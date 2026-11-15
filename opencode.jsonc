@@ -1,0 +1,62 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "lsp": true,
+  "mcp": {
+    "servers": {
+        "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "{ENV:CONTEXT7_API_KEY}"
+      }
+    },
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_PAT}"
+      }
+    },
+    "linear": {
+      "type": "remote",
+      "url": "https://mcp.linear.app/mcp",
+    },
+    }
+  },
+  // V2 permissions: ordered rules, last match wins. Global base: deny context7,
+  // GitHub, and Linear MCP for every agent; agent-specific allows below (and in
+  // .opencode/agents/*.md, appended after globals) grant exceptions.
+  "permissions": [
+    { "action": "context7_*", "resource": "*", "effect": "deny" },
+    { "action": "github_*", "resource": "*", "effect": "deny" },
+    { "action": "linear_*", "resource": "*", "effect": "deny" },
+  ],
+  "agents": {
+    "librarian": {
+      "permissions": [
+        { "action": "context7_*", "resource": "*", "effect": "allow" },
+      ],
+    },
+    "commits": {
+      "permissions": [
+        { "action": "github_*", "resource": "*", "effect": "allow" },
+      ],
+    },
+    "orchestrator": {
+      "permissions": [
+        { "action": "linear_*", "resource": "*", "effect": "allow" },
+      ],
+    },
+    "build-verify": {
+      "permissions": [
+        { "action": "context7_*", "resource": "*", "effect": "deny" },
+        { "action": "github_*", "resource": "*", "effect": "deny" },
+        { "action": "linear_*", "resource": "*", "effect": "deny" },
+      ],
+    },
+  },
+  "watcher": {
+    "ignore": ["node_modules/**", "dist/**", ".git/**"]
+  }
+}
