@@ -1,0 +1,15 @@
+-- Initial migration (placeholder).
+--
+-- This is an intentionally EMPTY, comment-only migration created during the
+-- `supabase init` scaffolding step. It records a baseline migration version
+-- without creating any database objects.
+--
+-- Business schema is DEFERRED to a later `dba` task. Per plan §9.7 the future
+-- schema will cover: orders (web/pos origin + kitchen status + Loyverse
+-- receipt id + sync status), order_items (name/price snapshot), received
+-- Loyverse events (deduped by receipt id), menu<->Loyverse item mapping, and
+-- a retry queue for receipt creation. None of that is defined here.
+--
+-- No tables, no RLS policies, no extensions, no seed data.
+-- Migrations are forward-only: add new timestamped files rather than editing
+-- this one.

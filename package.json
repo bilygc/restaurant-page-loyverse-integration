@@ -1,0 +1,27 @@
+{
+  "name": "restaurant-platform",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm run build -w @restaurant/shared && npm run build -w @restaurant/api",
+    "typecheck": "npm run typecheck -w @restaurant/shared && npm run typecheck -w @restaurant/api",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.10.1",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.72.2"
+  }
+}

@@ -1,0 +1,5 @@
+-- Seed data placeholder.
+--
+-- Intentionally EMPTY (comment-only). `supabase db reset` loads this file
+-- after migrations. Only fictional/synthetic data will be added by a later
+-- `dba` task; no real customer data, ever.

@@ -1,0 +1,23 @@
+# Render Blueprint — NestJS API (plan.md §2.B). Placeholder for code-review.
+# Secrets are NOT stored here; configure them in the Render dashboard.
+services:
+  - type: web
+    name: restaurant-platform-api
+    runtime: node
+    region: oregon
+    plan: starter
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:prod -w @restaurant/api
+    envVars:
+      - key: NODE_VERSION
+        value: '20'
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: '3000'
+    # --- Set in the Render dashboard (names only, never values here) ---
+    # STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_URL,
+    # SUPABASE_SERVICE_ROLE_KEY, LOYVERSE_ACCESS_TOKEN,
+    # RESEND_API_KEY, RESEND_FROM_EMAIL, PAYMENT_MODE
+# A /health endpoint + healthCheckPath are added with the API feature work.

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.next/
+.vercel/
+package-lock.json
+plan.md
+scripts/
+.opencode/
+apps/web/
+supabase/
+.env.example
+.gitkeep
+.gitignore
+.nvmrc
