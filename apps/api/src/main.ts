@@ -1,20 +1,36 @@
+import 'reflect-metadata';
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { DomainError } from './common/errors';
+import { APP_CONFIG } from './common/tokens';
+import type { AppConfig } from './config/env';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
-    // Stripe webhook signature verification requires the *unparsed* request
-    // body. `rawBody: true` exposes it as `req.rawBody`; no body parser may
-    // consume the webhook payload before verification. This is scaffolding
-    // config only — webhook handling/verification is intentionally NOT
-    // implemented here. NestJS uses Express by default (plan.md §2.B); no
-    // Fastify adapter.
+    // Keep the unparsed body available. Stripe signature verification (post-POC)
+    // requires it; the Loyverse webhook is unsigned and uses parsed JSON. No
+    // body parser may consume a signed webhook payload before verification.
     rawBody: true,
   });
 
-  // Render injects PORT; bind to 0.0.0.0 so the service is reachable.
+  const config = app.get<AppConfig>(APP_CONFIG);
   app.enableShutdownHooks();
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  // CORS restricted to the web app's origin.
+  app.enableCors({ origin: config.webAppOrigin });
+  // Render injects PORT; bind to 0.0.0.0 so the service is reachable.
+  await app.listen(config.port, '0.0.0.0');
 }
 
-void bootstrap();
+bootstrap().catch((err: unknown) => {
+  const logger = new Logger('Bootstrap');
+  // Fail fast at boot. Only DomainError messages are printed (they name
+  // variables, never values); raw errors are reduced to a generic line so no
+  // secret, connection string or stack trace is ever logged.
+  if (err instanceof DomainError) {
+    logger.error(`startup_failed [${err.code}] ${err.message}`);
+  } else {
+    logger.error('startup_failed: application could not start');
+  }
+  process.exit(1);
+});
